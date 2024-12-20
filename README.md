@@ -1,4 +1,4 @@
-# Uploading temperature sensor data in Thing Speak cloud
+![0e2cfa34-22fa-4a95-baea-a2678442d5a5](https://github.com/user-attachments/assets/38551940-0623-4077-9aa5-0b1353b085c4)# Uploading temperature sensor data in Thing Speak cloud
 
 # AIM:
 To monitor the temperature sensor data in the Thing speak using an ESP32 controller.
@@ -71,10 +71,71 @@ Automatically act on your data and communicate using third-party services like T
 
 
 # PROGRAM:
+~~~
+#include "ThingSpeak.h"
+#include <WiFi.h>
+#include "DHT.h"
+
+char ssid[]="Suzume";
+char pass[]="Born2Rule";
+
+const int t=25;
+WiFiClient client;
+DHT dht(25, DHT11);
+
+unsigned long myChannelField = 2755064;
+const int ChannelField1 = 1 ; 
+const int ChannelField2 = 2 ;
+const char *myWriteAPIKey="KH6JOZFR43252JZF";
+
+void setup()
+{
+  Serial.begin(115200);
+  pinMode (t,OUTPUT);
+  WiFi.mode(WIFI_STA);
+  ThingSpeak.begin(client);
+  dht.begin();
+  delay(1000);
+}
+
+void loop()
+{
+  if(WiFi.status()!=WL_CONNECTED)
+  {
+    Serial.print("Attempting to connet to SSID: "); 
+    Serial.println(ssid);
+    while(WiFi.status() != WL_CONNECTED)
+    {
+      WiFi.begin(ssid, pass);
+      Serial.print(".");
+      delay(5000);
+    }
+    Serial.println("\nConnected");
+  }
+  float temperature = dht.readTemperature();
+  float humidity = dht.readHumidity();
+  delay(1000);
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.println(" *C");
+  ThingSpeak.writeField(myChannelField, ChannelField1, temperature, myWriteAPIKey);
+  Serial.print("Humidity: ");
+  Serial.print(humidity);
+  Serial.println(" g.m-3");
+  ThingSpeak.writeField(myChannelField, ChannelField2, humidity, myWriteAPIKey);
+  delay(1000);
+}
+~~~
 
 # CIRCUIT DIAGRAM:
 
+![0e2cfa34-22fa-4a95-baea-a2678442d5a5](https://github.com/user-attachments/assets/f208c4a1-e4ce-44e7-a9c4-611696b03abb)
+
 # OUTPUT:
+
+![26d539b7-8222-40df-b17c-484effc65564](https://github.com/user-attachments/assets/9803bb38-54b5-4ff0-8771-de675c2342f2)
+
+![Screenshot 2024-12-17 093711](https://github.com/user-attachments/assets/c72b00dc-173b-40c4-a117-51a9cd2324a6)
 
 # RESULT:
 
