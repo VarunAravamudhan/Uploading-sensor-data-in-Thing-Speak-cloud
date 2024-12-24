@@ -1,3 +1,5 @@
+## Name :Varun A
+## Reg No: 24900420
 # Uploading temperature sensor data in Thing Speak cloud
 
 # AIM:
